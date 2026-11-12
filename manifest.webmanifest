@@ -1,0 +1,9 @@
+{
+  "name": "NEXCALL Smart Calling",
+  "short_name": "NEXCALL",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#071326",
+  "theme_color": "#071326",
+  "description": "A premium smart dialer and SIP calling app prototype."
+}

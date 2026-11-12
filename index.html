@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071326">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NEXCALL">
+<link rel="manifest" href="manifest.webmanifest">
+<title>NEXCALL — Smart Calling</title>
+<style>
+:root{--bg:#071326;--panel:#101f38;--panel2:#152846;--blue:#347cff;--cyan:#58d8ef;--text:#f4f7ff;--muted:#8fa2c2;--line:#243653;--green:#48d69a;--red:#ff667d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -15%,#1c3d6c 0,#0a1930 38%,var(--bg) 72%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+button,input{font:inherit}button{cursor:pointer;color:inherit;border:0}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 18px 20px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:2px;font-size:18px}
+.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(145deg,#4a9cff,#2452c9);display:grid;place-items:center;box-shadow:0 7px 22px #2367d966}
+.logo svg{width:22px}.online{font-size:11px;color:var(--green);background:#123b38;padding:7px 10px;border-radius:30px;border:1px solid #205a50}
+h1{font-size:27px;letter-spacing:-.7px;margin:4px 0 6px}.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.card{background:linear-gradient(145deg,#142b4c,#0d1b31);border:1px solid #263e61;border-radius:22px;padding:17px;box-shadow:0 14px 35px #0002}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#09172b;padding:5px;border-radius:14px;margin-bottom:18px}
+.mode button{padding:11px;border-radius:11px;background:transparent;color:var(--muted);font-size:13px;font-weight:700}
+.mode button.active{background:#1e4e9c;color:white;box-shadow:0 5px 15px #1b5ed044}
+.number{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:12px 4px 15px;color:white;font-size:28px;letter-spacing:2px;text-align:center;outline:none}
+.hint{text-align:center;color:var(--muted);font-size:11px;margin:10px 0 18px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:330px;margin:auto}
+.key{height:62px;border-radius:18px;background:linear-gradient(145deg,#1b3151,#12233d);border:1px solid #2b4264;font-size:24px;font-weight:600;box-shadow:inset 0 1px #ffffff0d}
+.key small{display:block;font-size:9px;color:#8fa7cb;letter-spacing:2px;margin-top:2px}
+.key:active{transform:scale(.96);background:#244b80}
+.callrow{display:flex;justify-content:center;gap:15px;margin:20px 0 4px}
+.call{width:66px;height:66px;border-radius:50%;background:linear-gradient(145deg,#43e0a2,#16a978);box-shadow:0 10px 25px #16b98544;display:grid;place-items:center}
+.call svg{width:27px}.back{width:48px;height:48px;align-self:center;border-radius:50%;background:#1a2d49;color:#b8c9e5}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:23px 2px 12px}.sectionhead h2{font-size:16px;margin:0}.link{color:#67a6ff;background:none;font-size:12px}
+.rowitem{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #263750}
+.avatar{width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,#244d7d,#162b49);display:grid;place-items:center;font-weight:800;color:#a9d7ff}
+.details{flex:1;min-width:0}.details b{display:block;font-size:14px}.details span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.calltype{font-size:11px;color:var(--green)}.missed{color:var(--red)}
+.bottom{position:fixed;z-index:5;bottom:0;left:0;right:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#09172beF;border-top:1px solid #263b5b;backdrop-filter:blur(18px)}
+.nav{max-width:500px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nav button{background:none;color:#8194b3;font-size:10px;display:grid;justify-items:center;gap:5px;padding:5px}
+.nav button.active{color:#70aaff}.nav svg{width:21px;height:21px}
+.page{display:none}.page.active{display:block}
+.setting{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pill{font-size:10px;color:#8db8ff;background:#16345c;border-radius:20px;padding:6px 9px}
+.primary{width:100%;padding:14px;border-radius:14px;background:linear-gradient(100deg,#347cff,#5365ef);font-weight:750;margin-top:15px}
+.field{width:100%;background:#09172b;border:1px solid #2a4163;border-radius:12px;padding:13px;color:white;margin:7px 0 12px;outline:none}
+label{font-size:11px;color:#9db0ce}
+.toast{position:fixed;z-index:20;left:50%;bottom:100px;transform:translateX(-50%);background:#203b60;border:1px solid #3e6495;padding:12px 16px;border-radius:13px;font-size:12px;max-width:90%;display:none;text-align:center}
+.smallnote{font-size:11px;line-height:1.6;color:#8fa2c2}
+.empty{text-align:center;color:var(--muted);padding:25px 8px;font-size:13px}
+@media(min-width:520px){body{padding-top:18px}.app{border-left:1px solid #152945;border-right:1px solid #152945}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><path d="M6 3h4l2 5-3 2a15 15 0 0 0 5 5l2-3 5 2v4c0 1-1 2-2 2C10 20 4 14 4 5c0-1 1-2 2-2z"/></svg></div>NEXCALL</div>
+ <div class="online">● READY</div>
+</header>
+
+<main id="dialer" class="page active">
+ <h1>Make a call.</h1><p class="sub">One smart place for SIM and internet calls.</p>
+ <div class="card">
+  <div class="mode"><button id="simMode" class="active" onclick="setMode('sim')">SIM CALL</button><button id="sipMode" onclick="setMode('sip')">SIP INTERNET</button></div>
+  <input id="number" class="number" type="tel" inputmode="tel" placeholder="Enter number" autocomplete="off">
+  <div class="hint" id="modeHint">Uses your iPhone carrier calling service</div>
+  <div class="pad">
+   <button class="key" onclick="digit('1')">1<small> </small></button><button class="key" onclick="digit('2')">2<small>ABC</small></button><button class="key" onclick="digit('3')">3<small>DEF</small></button>
+   <button class="key" onclick="digit('4')">4<small>GHI</small></button><button class="key" onclick="digit('5')">5<small>JKL</small></button><button class="key" onclick="digit('6')">6<small>MNO</small></button>
+   <button class="key" onclick="digit('7')">7<small>PQRS</small></button><button class="key" onclick="digit('8')">8<small>TUV</small></button><button class="key" onclick="digit('9')">9<small>WXYZ</small></button>
+   <button class="key" onclick="digit('*')">*<small> </small></button><button class="key" onclick="digit('0')">0<small>+</small></button><button class="key" onclick="digit('#')">#<small> </small></button>
+  </div>
+  <div class="callrow"><button class="back" onclick="erase()" aria-label="Delete">⌫</button><button class="call" onclick="startCall()" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="#062b20" stroke-width="2.5" stroke-linecap="round"><path d="M6 3h4l2 5-3 2a15 15 0 0 0 5 5l2-3 5 2v4c0 1-1 2-2 2C10 20 4 14 4 5c0-1 1-2 2-2z"/></svg></button><button class="back" onclick="clearNumber()">C</button></div>
+ </div>
+ <div class="sectionhead"><h2>Recent activity</h2><button class="link" onclick="showPage('history')">View all</button></div>
+ <div id="recent"></div>
+</main>
+
+<main id="contacts" class="page">
+ <h1>Contacts</h1><p class="sub">Your quick-access people.</p>
+ <div class="card"><input id="contactSearch" class="field" placeholder="Search contacts" oninput="renderContacts()"><div id="contactList"></div></div>
+ <p class="smallnote">Contact sync can be added in the native iOS version with your permission.</p>
+</main>
+
+<main id="history" class="page">
+ <h1>Call history</h1><p class="sub">A clear timeline of your recent calls.</p>
+ <div class="card"><div id="historyList"></div><button class="primary" onclick="clearHistory()">Clear demo history</button></div>
+</main>
+
+<main id="settings" class="page">
+ <h1>Settings</h1><p class="sub">Make NEXCALL work your way.</p>
+ <div class="card">
+  <div class="setting"><span>App status</span><span class="pill">Prototype</span></div>
+  <div class="setting"><span>SIM calling</span><span class="pill">iOS Phone handoff</span></div>
+  <div class="setting"><span>SIP account</span><span class="pill" id="sipStatus">Not configured</span></div>
+  <div class="setting"><span>Call recording</span><span class="pill">Not enabled</span></div>
+  <div class="setting"><span>Privacy lock</span><span class="pill">Planned</span></div>
+  <h2 style="font-size:15px;margin:22px 0 8px">SIP account setup</h2>
+  <label>SIP username</label><input id="sipUser" class="field" placeholder="e.g. 1001">
+  <label>SIP domain / server</label><input id="sipDomain" class="field" placeholder="sip.example.com">
+  <label>SIP password</label><input id="sipPass" class="field" type="password" placeholder="••••••••">
+  <button class="primary" onclick="saveSip()">Save configuration locally</button>
+  <p class="smallnote">This prototype stores only a local setup draft. It does not register with a SIP provider or place SIP calls. Never enter a real SIP password into a public demo.</p>
+ </div>
+</main>
+</div>
+<div class="bottom"><nav class="nav">
+ <button class="active" data-page="dialer" onclick="showPage('dialer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2"/></svg>Dialer</button>
+ <button data-page="contacts" onclick="showPage('contacts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6M17 5a3 3 0 0 1 0 6m1 3c2 .5 3.2 2 3.5 4"/></svg>Contacts</button>
+ <button data-page="history" onclick="showPage('history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5m4-1v5l3 2"/></svg>History</button>
+ <button data-page="settings" onclick="showPage('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="m19 13 2 1-2 4-2-1-2 1v2H9v-2l-2-1-2 1-2-4 2-1v-2L3 10l2-4 2 1 2-1V4h6v2l2 1 2-1 2 4-2 1z"/></svg>Settings</button>
+</nav></div>
+<div class="toast" id="toast"></div>
+<script>
+let mode='sim';
+let historyItems=[
+ {name:'Rahim',number:'+880 1712 000111',type:'Incoming',time:'Today · 10:42 AM'},
+ {name:'Karim',number:'+880 1812 000222',type:'Outgoing',time:'Yesterday · 8:15 PM'},
+ {name:'Unknown',number:'+880 1912 000333',type:'Missed',time:'Yesterday · 6:20 PM'}
+];
+let contacts=[
+ {name:'Rahim',number:'+8801712000111'},{name:'Karim',number:'+8801812000222'},
+ {name:'Nusrat',number:'+8801912000333'},{name:'Support',number:'+8809610000000'}
+];
+function setMode(m){mode=m;document.getElementById('simMode').classList.toggle('active',m==='sim');document.getElementById('sipMode').classList.toggle('active',m==='sip');document.getElementById('modeHint').textContent=m==='sim'?'Uses your iPhone carrier calling service':'SIP calling requires a configured provider and native WebRTC/SIP integration'}
+function digit(d){document.getElementById('number').value+=d}
+function erase(){let e=document.getElementById('number');e.value=e.value.slice(0,-1)}
+function clearNumber(){document.getElementById('number').value=''}
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',2600)}
+function startCall(){
+ let n=document.getElementById('number').value.trim();if(!n){toast('Enter a phone number first.');return}
+ if(mode==='sim'){location.href='tel:'+n;return}
+ toast('SIP engine is not connected yet. Configure a provider in Settings after native integration.')
+}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='history')renderHistory();if(p==='contacts')renderContacts()}
+function itemHTML(x){let missed=x.type==='Missed';return `<div class="rowitem"><div class="avatar">${x.name.slice(0,1).toUpperCase()}</div><div class="details"><b>${x.name}</b><span>${x.number} · ${x.time}</span></div><span class="calltype ${missed?'missed':''}">${x.type}</span></div>`}
+function renderRecent(){document.getElementById('recent').innerHTML=historyItems.slice(0,3).map(itemHTML).join('')}
+function renderHistory(){document.getElementById('historyList').innerHTML=historyItems.length?historyItems.map(itemHTML).join(''):'<div class="empty">No calls in this demo history.</div>'}
+function renderContacts(){let q=(document.getElementById('contactSearch')?.value||'').toLowerCase();let a=contacts.filter(c=>(c.name+c.number).toLowerCase().includes(q));document.getElementById('contactList').innerHTML=a.map(c=>`<div class="rowitem"><div class="avatar">${c.name[0]}</div><div class="details"><b>${c.name}</b><span>${c.number}</span></div><button class="link" onclick="document.getElementById('number').value='${c.number}';showPage('dialer')">Call</button></div>`).join('')||'<div class="empty">No matching contacts.</div>'}
+function clearHistory(){historyItems=[];renderHistory();renderRecent();toast('Demo history cleared.')}
+function saveSip(){let u=document.getElementById('sipUser').value.trim(),d=document.getElementById('sipDomain').value.trim(),p=document.getElementById('sipPass').value;if(!u||!d||!p){toast('Complete all SIP fields first.');return}document.getElementById('sipStatus').textContent='Draft saved';toast('Demo configuration saved in this page only.')}
+renderRecent();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
